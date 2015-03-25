@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="utf-8" />
-		<title>HTML 5 Canvas - Formes</title>
+		<title>HTML 5 Canvas - Boucles et fonctions</title>
 		<style>
 			body {
 				font: 14px sans-serif;
@@ -19,8 +19,8 @@
 		</style>
 	</head>
 	<body>
-		<h1>HTML 5 Canvas : Formes</h1>
-		<p>Les différentes méthodes de dessin</p>
+		<h1>HTML 5 Canvas - Boucles et fonctions</h1>
+		<p>Actualiser la page</p>
 		<canvas id="my-canvas" width="640" height="640"> 
 			Texte alternatif pour les navigateurs ne supportant pas Canvas.
 		</canvas>
@@ -43,39 +43,69 @@
 			context.lineWidth = 10;
 			context.lineJoin = 'round';
 			context.lineCap = 'round';
-			context.strokeStyle = '#fff';
-			
-			// Square
-			context.strokeRect(70,70,200,200);
-			// Circle
-			context.beginPath();       // Début du chemin
-			context.arc(470,170,100,0,Math.PI*2,true); // Arc de cercle: x ,y ,rayon , angle début, angle fin
-			context.stroke();          // Tracé
-			context.closePath();       // Fermeture du chemin
-			// Ovoid help
+			context.strokeStyle = '#444';
+		
+			// Save
 			context.save();
-			context.lineWidth = 5;
+
+			// Design
+			context.lineWidth = 4;
 			context.setLineDash([20,20]);
-			context.lineDashOffset=10;
-			context.strokeStyle = '#666';
-			context.strokeRect(70,370,200,200);
+			context.lineDashOffset = 10;
+
+			// Board
+			context.beginPath();
+			context.moveTo(size+margin,margin);
+			context.lineTo(size+margin,size*3+margin);
+			context.moveTo(size*2+margin,margin);
+			context.lineTo(size*2+margin,size*3+margin);
+			context.moveTo(margin,size+margin);
+			context.lineTo(size*3+margin,size+margin);
+			context.moveTo(margin,size*2+margin);
+			context.lineTo(size*3+margin,size*2+margin);
+			context.stroke();
+			context.closePath();
+
+			// Restore
 			context.restore();
-			// Ovoid
-			context.beginPath();       // Début du chemin
-			context.moveTo(70,370);    // Le tracé part du point 50,50
-			context.quadraticCurveTo(270,370,270,570); // Quadratic: controle-1-x, controle-1-y, x2, y2
-			context.moveTo(70,370);    // Le tracé part du point 50,50
-			context.bezierCurveTo(70,570,70,570,270,570); // Bezier: controle-1-x, controle-1-y, controle-2-x, controle-2-y, x2, y2
-			context.stroke();          // Tracé
-			context.closePath();       // Fermeture du chemin
+			
+			// Loop
+			for (var i=0; i<3; i++) {
+				for (var j=0; j<3; j++) {
+					hue = hue+20;
+					context.strokeStyle = 'hsl('+hue+',75%,50%)';
+					if (Math.random() > 0.5) {
+						cross(i,j);
+					} else {
+						circle(i,j);
+					}
+				}
+			}
+
 			// Cross
-			context.beginPath();       // Début du chemin
-			context.moveTo(370,370);   // Le tracé part du point 370,370
-			context.lineTo(570,570);   // Un segment est ajouté vers 570,570
-			context.moveTo(570,370);   // Puis on saute jusqu'à 570,370
-			context.lineTo(370,570);   // Puis on trace jusqu'à 370,570
-			context.stroke();          // Tracé
-			context.closePath();       // Fermeture du chemin
+			function cross(i,j) {
+				x = i*size+size/2+margin;
+				y = j*size+size/2+margin;
+				half = size/3-margin;
+				context.beginPath();
+				context.moveTo(x-half,y-half);
+				context.lineTo(x+half,y+half);
+				context.moveTo(x-half,y+half);
+				context.lineTo(x+half,y-half);
+				context.stroke();
+				context.closePath();
+			}
+			
+			// Circle
+			function circle(i,j) {
+				x = i*size+size/2+margin;
+				y = j*size+size/2+margin;
+				half = size/3-margin;
+				context.beginPath();
+				context.arc(x,y,half,0,Math.PI*2,true);
+				context.stroke();
+				context.closePath();
+			}
 
 		</script>
 	</body>
